@@ -1,0 +1,267 @@
+  	<head>
+      	<!-- Latest compiled and minified CSS -->
+      	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      	<!-- Optional theme -->
+      	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+      
+      	<title> Users List App </title>
+  	</head>
+
+  	<body>
+    	<div class="container">
+			<h1> Users List App </h1>
+			<hr>
+			<div class="row" *ngIf="!isVerified">
+				<div class="container">
+					<div class="col-md-4 pull-right"> 
+						  <button 
+						  		type="button" 
+						  		class="btn btn-info" 
+						  		(click)="open(SignIn, 'SignIn', {})"> Sign In
+						  </button> 
+
+						  <registration *ngIf="!isVerified"></registration> 
+
+						  <ng-template #SignIn let-c="close" let-d="dismiss">
+						     <div class="modal-content"> 
+						        <div class="modal-header">
+						          	<button type="button" class="close" (click)="c('Close click')">&times;</button>
+						          	<h4 class="modal-title">User List App</h4> 
+						        </div>
+						        <div class="modal-body">
+						        	<div class="row">
+						        		<div class="col-md-12">
+						        			<hr>
+						        			<h4 class="modal-title" align="center"  *ngIf="!isVerified"> User Data </h4> 
+						        			<h4 class="modal-title" align="center" *ngIf="isVerified"> Authorized User </h4> 
+											<hr>
+											<input class="form-control" [(ngModel)]="email" *ngIf="!isVerified" placeholder="Email">
+											<hr>
+											<input type="password" class="form-control" [(ngModel)]="password" *ngIf="!isVerified" placeholder="Password">
+											<hr *ngIf="incorrectData">
+											<p *ngIf="incorrectData" style="color: red;"> Wrong email | password! Try again! </p>
+										</div>
+									</div>
+						        </div>
+						        <div class="modal-footer">
+						        	<button 
+										class="btn btn-primary"
+										(click)="verifyUser()"
+										*ngIf="!isVerified"> Sign In						
+									</button> &nbsp;
+
+									<button 
+										class="btn btn-info"
+										(click)="dataCleaner()"
+										*ngIf="!isVerified"> Clear						
+									</button> &nbsp;
+									
+						          	<button 
+						          		type="button" 
+						          		class="btn btn-info" 
+						          		(click)="c('Close click')"> Close
+					          		</button>
+						        </div>
+						    </div> 
+						</ng-template>
+					</div> 
+				</div>
+			</div> 
+			
+			<div class="row" *ngIf="isVerified">
+				<div class="container">
+					<div class="col-md-4 pull-right"> 
+						  <button 
+						  		type="button" 
+						  		class="btn btn-info"
+						  		*ngIf="user_role == 'admin' && searchAvailable == false" 
+						  		(click)="open(addNewUser, 'add', {})"> Add User
+						  </button> 
+
+						  <button 
+						  		type="button" 
+						  		class="btn btn-info" 
+						  		(click)="signOut()"> Sign Out
+						  </button> 
+
+						   <button 
+						  		type="button" 
+						  		class="btn btn-info"
+						  		*ngIf="!searchAvailable" 
+						  		(click)="searchAvailable = !searchAvailable"> Search
+						  </button> 
+
+						  <button 
+						  		type="button" 
+						  		class="btn btn-info"
+						  		*ngIf="searchAvailable" 
+						  		(click)="searchAvailable = !searchAvailable"> User List
+						  </button> 
+
+						  <ng-template #addNewUser let-c="close" let-d="dismiss">
+						     <div class="modal-content"> 
+						        <div class="modal-header">
+						          	<button type="button" class="close" (click)="c('Close click')">&times;</button>
+						          	<h4 class="modal-title">User List App</h4> 
+						        </div>
+						        <div class="modal-body">
+						        	<h3> Some text </h3>
+						        	<div class="row">
+						        		<div class="col-md-12">
+						        			<hr>
+						        			<h4 class="modal-title" align="center"> New User Data </h4> 
+						        			<hr>
+						        			<input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
+						        			<hr>
+											<input class="form-control" [(ngModel)]="lastname" placeholder="Last Name">
+											<hr>
+											<input class="form-control" #Email [(ngModel)]="email" (click)="Email.value = ''" placeholder="Email">
+											<hr>
+											<input class="form-control" #dbth [(ngModel)]="dateofbirth" (click)="dbth.value = ''" placeholder="Date of Birth">
+											<hr>
+											<input class="form-control" #passwd [(ngModel)]="password" (click)="passwd.value = ''" placeholder="Password">
+											<hr>
+											<label *ngIf="emptyField" style="color: red;">Fill all text fields!</label>
+											<hr *ngIf="emptyField">
+											<select type="select" [(ngModel)]="role"> 
+												<option value="admin">admin</option>
+												<option value="viewer">viewer</option>
+											</select>
+										</div>
+									</div>
+						        </div>
+						        <div class="modal-footer">
+						        	<button 
+										class="btn btn-primary"
+										(click)="addUser($event)"> Add User						
+									</button> &nbsp;
+
+									<button 
+										class="btn btn-info"
+										(click)="dataCleaner()"> Clear						
+									</button> &nbsp;
+									
+						          	<button 
+						          		type="button" 
+						          		class="btn btn-info" 
+						          		(click)="c('Close click')"> Close
+					          		</button>
+						        </div>
+						    </div> 
+						</ng-template>
+					</div> 
+				</div>
+			</div> 
+			<hr *ngIf="isVerified">
+			<search *ngIf="searchAvailable"></search>
+			<div class="row" *ngIf="isVerified && !searchAvailable">
+				<div class="col-md-8 pull-left">
+					<label>Amount of items:</label>
+					<select type="select" [(ngModel)]="amount"> 
+						<option value="1" (click)="calcNumberOfRecords(1)">1</option>
+						<option value="5" (click)="calcNumberOfRecords(5)">5</option>
+						<option value="10" (click)="calcNumberOfRecords(10)">10</option>
+						<option value="15" (click)="calcNumberOfRecords(15)">15</option>
+						<option value="20" (click)="calcNumberOfRecords(20)">20</option>
+						<option value="25" (click)="calcNumberOfRecords(25)">25</option>
+					</select> &nbsp;
+
+					<label>Amount of records: {{ amountOfRecords }}</label> &nbsp;	
+				</div>
+			</div>		
+			<hr *ngIf="isVerified && !searchAvailable">
+			<table class="table" *ngIf="isVerified && !searchAvailable">
+				<thead>
+					<tr>
+						<th>First name</th>
+						<th>Last name</th>
+						<th>Email</th>
+						<th>Date of birth</th>
+						<th>Password</th>
+						<th>Role</th>
+						<th colspan="2">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let user of users | paginate: { itemsPerPage: amount, currentPage: page }">
+						<td>{{ user.firstname }}</td>
+						<td>{{ user.lastname }}</td>
+						<td>{{ user.email }}</td>
+						<td> {{ user.dateofbirth }}</td>
+						<td>{{ user.password }}</td>
+						<td>{{ user.role }}</td>
+
+						<td><button 
+								class="btn btn-danger"
+								*ngIf="user_role == 'admin'"
+								(click)="deleteUser(user._id)"
+								> Delete						
+							</button></td>
+						<td><button 
+								class="btn btn-warning"
+								*ngIf="user_role == 'admin'"
+								(click)="open(editUserData, 'update', user)"> Edit						
+							</button></td> 
+					</tr> 	
+				</tbody>
+			</table>
+
+
+
+			<ng-template #editUserData let-c="close" let-d="dismiss">
+		        <div class="modal-header">
+		          <button type="button" class="close" (click)="c('Close click')">&times;</button>
+		          <h3 class="modal-title">User List App</h3>
+		        </div>
+		        <div class="modal-body">
+		        	<h3> Some text </h3>
+		        	<div class="row">
+		        		<div class="col-md-12">
+		        			<hr> 
+		        			<h4 class="modal-title" align="center"> User Data </h4>
+		        			<hr>
+		        			<input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
+		        			<hr>
+							<input class="form-control" [(ngModel)]="lastname" placeholder="Last Name">
+							<hr>
+							<input class="form-control" [(ngModel)]="email" placeholder="Email">
+							<hr>
+							<input class="form-control" [(ngModel)]="dateofbirth" placeholder="Date of Birth">
+							<hr>
+							<select type="select" [(ngModel)]="role"> 
+												<option value="admin">admin</option>
+												<option value="viewer">viewer</option>
+											</select>
+							<hr *ngIf="emptyField">
+							<label *ngIf="emptyField" style="color: red;">Fill all text fields!</label>
+						</div>
+					</div>
+		        </div>
+		        <div class="modal-footer">
+		        	<button 
+						class="btn btn-primary"
+						(click)="updateUserData(user_id)"> Update						
+					</button> &nbsp;
+
+					<button 
+						class="btn btn-info"
+						(click)="dataCleaner()"> Clear						
+					</button> &nbsp;
+
+		          	<button 
+		          		type="button" 
+		          		class="btn btn-info"
+		          		(click)="c('Close click')"> Close
+	          		</button>
+		        </div>
+			</ng-template> 						
+			<hr>
+
+			<pagination-controls (pageChange)="page =$event" *ngIf="isVerified && !searchAvailable"></pagination-controls>
+			<hr *ngIf="isVerified && !searchAvailable"> 
+		</div>
+
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	</body>

@@ -1,0 +1,98 @@
+  	<head>
+      	<!-- Latest compiled and minified CSS -->
+      	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      	<!-- Optional theme -->
+      	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+  	</head>
+
+  	<body>
+    	<div class="container">
+			<hr>
+			<div class="row">
+				<div class="col-md-4 center-block">
+					<h3> User Data </h3>
+					<hr>
+						<input type="text" [(ngModel)]="firstName" placeholder="First Name">
+					<hr>
+						<label>Second parameter:</label>
+						<select (click)="secondFieldCleaner()">
+							<option value="Last Name" (click)="searchByEmail = false">Last Name</option>
+							<option value="Email" (click)="searchByEmail = true">Email</option>
+						</select>
+					<hr>
+						<input 
+							type="text" 
+							[(ngModel)]="lastName" 
+							*ngIf="!searchByEmail"
+							placeholder="Last Name">
+						<input 
+							type="text" 
+							[(ngModel)]="userEmail" 
+							*ngIf="searchByEmail"
+							placeholder="Email">
+					<hr>
+						<label *ngIf="emptyField" style="color: red;">Fill all text fields!</label>
+					<hr *ngIf="emptyField">
+
+					<button 
+				  		type="button" 
+				  		class="btn btn-primary" 
+				  		(click)="findUsers()"> Search
+					</button> &nbsp;
+
+					<button 
+				  		type="button" 
+				  		class="btn btn-info" 
+				  		(click)="fieldsCleaner()"> Clear
+					</button>
+				</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="container">
+					<div class="col-md-4">
+						<h3> Search results: {{ searchResultsAmount }} records </h3>
+					</div> 
+				</div>
+			</div> 
+			<hr>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>First name</th>
+						<th>Last name</th>
+						<th>Email</th>
+						<th>Date of birth</th>
+						<th>Password</th>
+						<th>Role</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let user of users">
+						<td>{{ user.firstname }}</td>
+						<td>{{ user.lastname }}</td>
+						<td>{{ user.email }}</td>
+						<td> {{ user.dateofbirth }}</td>
+						<td>{{ user.password }}</td>
+						<td>{{ user.role }}</td>
+					</tr> 				
+				</tbody>
+			</table>	
+			<hr> 
+			<div class="row">
+				<div class="container">
+					<div class="col-md-4 pull-right">
+						<button
+							class="btn btn-info"
+							(click)="resultsCleaner()"> Clear							
+						</button>
+					</div> 
+				</div>
+			</div> 
+		</div>
+
+    	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	</body>
