@@ -258,7 +258,8 @@
 			</ng-template> 						
 			<hr>
 
-			<pagination-controls (pageChange)="page =$event" *ngIf="isVerified && !searchAvailable"></pagination-controls>
+			<pagination-controls 
+				(pageChange)="page =$event" *ngIf="isVerified && !searchAvailable"></pagination-controls>
 			<hr *ngIf="isVerified && !searchAvailable"> 
 		</div>
 

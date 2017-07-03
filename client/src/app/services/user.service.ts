@@ -44,4 +44,17 @@ export class UserService {
 		return this.http.put('/api/user/' + id, UserData, requestOptions)
 			.map(res => res.json()); 
 	}
+
+	getUsersPagination(amount, currentPage) {
+		let token = localStorage.getItem('token');
+		let params: URLSearchParams = new URLSearchParams();
+		params.set('amount', amount);
+		params.set('currpage', currentPage);
+
+		let requestOptions = new RequestOptions();
+		requestOptions.params = params;
+				
+		return this.http.get('/api/users/pagination', requestOptions)
+			.map(res => res.json());
+	}
 }

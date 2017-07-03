@@ -149,5 +149,21 @@
 		});
 	});	
 
+	router.get('/users/pagination', function (req, res, next) {
+		var skipAmount = req.query.amount * (req.query.currpage - 1);
+		var query = User.find()
+			.skip(skipAmount)
+			.limit(req.query.amount);
+
+		query.exec(function (err, users) {
+			if (err) {
+				res.send(err);
+			} else {
+				res.json(users);
+				next();
+			}
+		});
+	});
+
 	module.exports = router;
 }
