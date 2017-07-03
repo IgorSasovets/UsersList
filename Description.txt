@@ -1,0 +1,4 @@
+App features:
+- user authentification;
+- user search on backend;
+- allows perform CRUD operations depending on user role.
