@@ -1,13 +1,15 @@
 {
-	const express = require('express');
-	const router = express.Router();
-	const mongoose = require('mongoose');
-	const bcrypt = require('bcrypt');
-	const bodyParser = require('body-parser');
-	const path = require('path');
-	const jwt = require('jsonwebtoken');
+	const
+		express = require('express'),
+		mongoose = require('mongoose'),
+		bcrypt = require('bcrypt'),
+		bodyParser = require('body-parser'),
+		path = require('path'),
+		jwt = require('jsonwebtoken'),
+		User = require('./User.model');
+
+    const router = express.Router();
 	var app = express();
-	var User = require('./User.model');
 
 	process.env.SECRET_KEY = "secret1111ljlkjlkjkljkljkljhhghffsewqaw";
 
@@ -25,39 +27,35 @@
 	db.on('error', console.error.bind(console, 'connection error:'));
 
 	router.get('/users', function (req, res, next) {
-		var query = User.find({});
-			
-		query.exec(function (err, users) {
-			if (err) {
-				res.send(err);
-			} else {
+		User.find({})
+			.then(function gedData(users) {
 				res.json(users);
-			}
-		});
+			})
+			.catch(function getError(err) {
+				res.status(500).json({error: 'Internal server error...'});
+			});
 	});
 
 	router.get('/user/:id', function (req, res, next) {
-		var query = User.findOne({'_id' : req.params.id});
-
-		query.exec(function (err, user) {
-			if (err) {
-				res.send(err);
-			} else {
+		User.findOne({'_id' : req.params.id})
+			.then(function getUser(user) {
 				res.json(user);
-			}
-		});
+			})
+			.catch(function getError(err) {
+				res.status(404).json({error: 'User with this defined id not found'});
+			});
 	});
 
 	router.post('/user', function (req, res, next) {
 		var newUser = new User(req.body);
 
-		newUser.save(function (err) {
-			if (err) {
-				res.send(err);
-			} else {
+		newUser.save()
+			.then(function onSuccess() {
 				res.json(req.body);
-			}
-		}); 
+			}) 
+			.catch(function getError(err) {
+				res.status(500).json({error: 'Bad data...'});
+			});
 	});
 
 	router.delete('/user/:id', function (req, res, next) {
