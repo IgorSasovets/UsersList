@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../../../User';
@@ -13,6 +12,7 @@ import { User } from '../../../../User';
 export class UserComponent {
 	closeResult: string;
 	isVerified: boolean;
+	isAuthorized: boolean;
 	incorrectData: boolean;
 	searchAvailable: boolean;
 	emptyField: boolean;
@@ -31,11 +31,11 @@ export class UserComponent {
   	amount: number;
   	currentPage: number;
 
-	constructor(private modalService: NgbModal, private userService: UserService, private authService: AuthService) {
+	constructor(private userService: UserService, private authService: AuthService) {
 		this.currentPage = 1;
 		this.incorrectData = false;
 		this.searchAvailable = false;
-		this.isVerified = false;
+		this.isVerified = this.isAuthorized = false;
 		this.emptyField = false;
 		this.getAllUsers();
 	}
@@ -131,6 +131,29 @@ export class UserComponent {
 		}  		
 	}
 
+	updateUserData() {
+	    if (this.emptyFieldChecking()) {
+	      var UserData = {
+	            firstname: this.firstname,
+	            lastname: this.lastname,
+	            email: this.email,
+	            password: this.password,
+	            dateofbirth: this.dateofbirth,
+	            role: this.role
+	          };      
+
+	        this.userService.updateRecord(this.user_id, UserData)
+	          .subscribe(users => {
+	            this.dataCleaner();
+	            this.getAllUsers();
+	          });  
+
+	        this.emptyField = false;
+	    } else {
+	      this.emptyField = true;
+	    }
+    }
+
 	deleteUser(id) {
 		this.userService.deleteUser(id)
 			.subscribe(users => {
@@ -146,27 +169,14 @@ export class UserComponent {
 			}); 
 	}
 
-	updateUserData(id) {
-		if (this.emptyFieldChecking()) {
-		var UserData = {
-	  			firstname: this.firstname,
-	  			lastname: this.lastname,
-	  			email: this.email,
-	  			password: this.password,
-	  			dateofbirth: this.dateofbirth,
-	  			role: this.role
-	  		};  		
-
-  		this.userService.updateRecord(this.user_id, UserData)
-  			.subscribe(users => {
-  				this.dataCleaner();
-  				this.getAllUsers();
-  			});  
-
-				this.emptyField = false;
-  	} else {
-  		this.emptyField = true;
-  	}
+	editUser(user) {
+		this.user_id = user._id;
+		this.firstname = user.firstname;
+		this.lastname = user.lastname;
+		this.email = user.email;
+		this.password = user.password;
+		this.dateofbirth = user.dateofbirth;
+		this.role = user.role;
 	}
 
 	getUserRole() {
@@ -186,25 +196,25 @@ export class UserComponent {
 			role: ''
 		};
 
-	this.authService.verifyUser(this.email, newUser)
-		.subscribe(user => {
-			if (user.token == 'error' || user.token == 'wrong data') {
-				this.incorrectData = true;
-				this.isVerified = false;
-			} else {
-				this.incorrectData = false;
-				this.isVerified = true;
-				localStorage.setItem('token', user.token);
-				this.getUserRole();
-				this.dataCleaner();
-				this.getAllUsers();
-			}	
-		});  
+		this.authService.verifyUser(this.email, newUser)
+			.subscribe(user => {
+				if (user.token == 'error' || user.token == 'wrong data') {
+					this.incorrectData = true;
+					this.isVerified = false;
+				} else {
+					this.incorrectData = false;
+					this.isVerified = true;
+					localStorage.setItem('token', user.token);
+					this.getUserRole();
+					this.dataCleaner();
+					this.getAllUsers();
+				}	
+			});  
 	}
 
 	signOut() {
-		(this.users.length > 0) ? this.isVerified = false : this.isVerified = true; 
 		this.incorrectData = false;
+		this.isAuthorized = this.isVerified = false;
 		this.searchAvailable = false;
 		this.dataCleaner();
 		localStorage.removeItem('token');
@@ -217,37 +227,10 @@ export class UserComponent {
 			});
 	}
 
-	open(content, modal_window_name, user) {
-		if (modal_window_name == 'add') {
-			this.dataCleaner();
-		} else if (modal_window_name == 'update'){
-			this.user_id = user._id;
-			this.firstname = user.firstname;
-			this.lastname = user.lastname;
-			this.email = user.email;
-			this.dateofbirth = user.dateofbirth;
-			this.password = user.password;
-			this.role = user.role;
-		} else {
-			this.incorrectData = false;
+	hideAuthPanel() {
+		if (this.isVerified) {
+			this.isAuthorized = true;
 			this.dataCleaner();
 		}
-
-  	this.modalService.open(content).result.then((result) => {
-    	this.closeResult = `Closed with: ${result}`;
-  	}, (reason) => {
-    		this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-  	});
-	}
-
-	private getDismissReason(reason: any): string {
-  	if (reason === ModalDismissReasons.ESC) {
-    		return 'by pressing ESC';
-  	} else if (reason === 
-  	ModalDismissReasons.BACKDROP_CLICK) {
-    		return 'by clicking on a backdrop';
-  	} else {
-    		return  `with: ${reason}`;
-  	}
 	}
 }

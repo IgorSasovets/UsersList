@@ -12,32 +12,31 @@
     	<div class="container">
 			<h1> Users List App </h1>
 			<hr>
-			<div class="row" *ngIf="!isVerified">
+			<div class="row" *ngIf="!isAuthorized">
 				<div class="container">
 					<div class="col-md-4 pull-right"> 
 						  <button 
 						  		type="button" 
 						  		class="btn btn-info" 
-						  		(click)="open(SignIn, 'SignIn', {})"> Sign In
+						  		*ngIf="!isVerified"
+						  		data-toggle="modal"
+						  		data-target="#signIn"> Sign In
 						  </button> 
 
 						  <registration *ngIf="!isVerified"></registration> 
 
-						  <ng-template #SignIn let-c="close" let-d="dismiss">
+						  <div class="modal fade" id="signIn">
+  							<div class="modal-dialog" role="dialog">
 						     <div class="modal-content"> 
 						        <div class="modal-header">
-						          	<button type="button" class="close" (click)="c('Close click')">&times;</button>
-						          	<h4 class="modal-title">User List App</h4> 
+						          	<h4 class="modal-title" align="center" *ngIf="!isVerified"> User Data </h4> 
+						        	<h4 class="modal-title" align="center" *ngIf="isVerified"> Authorized User </h4>  
 						        </div>
 						        <div class="modal-body">
 						        	<div class="row">
 						        		<div class="col-md-12">
-						        			<hr>
-						        			<h4 class="modal-title" align="center"  *ngIf="!isVerified"> User Data </h4> 
-						        			<h4 class="modal-title" align="center" *ngIf="isVerified"> Authorized User </h4> 
-											<hr>
 											<input class="form-control" [(ngModel)]="email" *ngIf="!isVerified" placeholder="Email">
-											<hr>
+											<hr *ngIf="!isVerified">
 											<input type="password" class="form-control" [(ngModel)]="password" *ngIf="!isVerified" placeholder="Password">
 											<hr *ngIf="incorrectData">
 											<p *ngIf="incorrectData" style="color: red;"> Wrong email | password! Try again! </p>
@@ -59,12 +58,14 @@
 									
 						          	<button 
 						          		type="button" 
-						          		class="btn btn-info" 
-						          		(click)="c('Close click')"> Close
+						          		class="btn btn-info"
+						          		(click)="hideAuthPanel()" 
+						          		data-dismiss="modal"> Close
 					          		</button>
 						        </div>
 						    </div> 
-						</ng-template>
+						</div>
+					  </div>
 					</div> 
 				</div>
 			</div> 
@@ -76,7 +77,8 @@
 						  		type="button" 
 						  		class="btn btn-info"
 						  		*ngIf="user_role == 'admin' && searchAvailable == false" 
-						  		(click)="open(addNewUser, 'add', {})"> Add User
+						  		data-toggle="modal"
+						  		data-target="#addingUser"> Add User
 						  </button> 
 
 						  <button 
@@ -99,19 +101,15 @@
 						  		(click)="searchAvailable = !searchAvailable"> User List
 						  </button> 
 
-						  <ng-template #addNewUser let-c="close" let-d="dismiss">
+						  <div class="modal fade" id="addingUser">
+  							<div class="modal-dialog" role="dialog">
 						     <div class="modal-content"> 
-						        <div class="modal-header">
-						          	<button type="button" class="close" (click)="c('Close click')">&times;</button>
-						          	<h4 class="modal-title">User List App</h4> 
+						        <div class="modal-header">						          	
+						          	<h4 class="modal-title">New User Data</h4> 
 						        </div>
 						        <div class="modal-body">
-						        	<h3> Some text </h3>
 						        	<div class="row">
 						        		<div class="col-md-12">
-						        			<hr>
-						        			<h4 class="modal-title" align="center"> New User Data </h4> 
-						        			<hr>
 						        			<input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
 						        			<hr>
 											<input class="form-control" [(ngModel)]="lastname" placeholder="Last Name">
@@ -145,11 +143,12 @@
 						          	<button 
 						          		type="button" 
 						          		class="btn btn-info" 
-						          		(click)="c('Close click')"> Close
+						          		data-dismiss="modal"> Close
 					          		</button>
 						        </div>
 						    </div> 
-						</ng-template>
+						  </div>
+						</div>
 					</div> 
 				</div>
 			</div> 
@@ -198,31 +197,29 @@
 								(click)="deleteUser(user._id)"
 								> Delete						
 							</button></td>
-						<td><button 
+						<td> <button 
 								class="btn btn-warning"
 								*ngIf="user_role == 'admin'"
-								(click)="open(editUserData, 'update', user)"> Edit						
-							</button></td> 
+								(click)="editUser(user)"
+								data-toggle="modal"
+								data-target="#editUser"> Edit						
+							</button>
+						</td> 
 					</tr> 	
 				</tbody>
 			</table>
 
-
-
-			<ng-template #editUserData let-c="close" let-d="dismiss">
-		        <div class="modal-header">
-		          <button type="button" class="close" (click)="c('Close click')">&times;</button>
-		          <h3 class="modal-title">User List App</h3>
-		        </div>
-		        <div class="modal-body">
-		        	<h3> Some text </h3>
-		        	<div class="row">
-		        		<div class="col-md-12">
-		        			<hr> 
-		        			<h4 class="modal-title" align="center"> User Data </h4>
-		        			<hr>
-		        			<input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
-		        			<hr>
+			<div class="modal fade" id="editUser" role="dialog">
+			   <div class="modal-dialog">
+				<div class="modal-content">
+			    <div class="modal-header">
+			      <h3 class="modal-title">User Data</h3>
+			    </div>
+			    <div class="modal-body">
+			    	<div class="row">
+			    		<div class="col-md-12">
+			    			<input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
+			    			<hr>
 							<input class="form-control" [(ngModel)]="lastname" placeholder="Last Name">
 							<hr>
 							<input class="form-control" [(ngModel)]="email" placeholder="Email">
@@ -237,11 +234,11 @@
 							<label *ngIf="emptyField" style="color: red;">Fill all text fields!</label>
 						</div>
 					</div>
-		        </div>
-		        <div class="modal-footer">
-		        	<button 
+			    </div>
+			    <div class="modal-footer">
+			    	<button 
 						class="btn btn-primary"
-						(click)="updateUserData(user_id)"> Update						
+						(click)="updateUserData()"> Update						
 					</button> &nbsp;
 
 					<button 
@@ -249,13 +246,16 @@
 						(click)="dataCleaner()"> Clear						
 					</button> &nbsp;
 
-		          	<button 
-		          		type="button" 
-		          		class="btn btn-info"
-		          		(click)="c('Close click')"> Close
-	          		</button>
-		        </div>
-			</ng-template> 						
+			      	<button 
+			      		type="button" 
+			      		class="btn btn-info"
+			      		data-dismiss="modal"> Close
+			  		</button>
+			    </div>
+			   </div>
+			 </div>
+			</div>
+	
 			<hr>
 
 			<pagination-controls 

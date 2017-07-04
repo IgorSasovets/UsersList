@@ -1,57 +1,55 @@
-	<button 
-  		type="button" 
-  		class="btn btn-info"
-  		(click)="open(signUp)"> SignUp
- 	</button> 
+<button 
+    type="button" 
+    class="btn btn-info"
+    data-toggle="modal"
+    data-target="#signUp"> SignUp
+</button> 
 
-  	<ng-template #signUp let-c="close" let-d="dismiss">
-     	<div class="modal-content"> 
-        	<div class="modal-header">
-          		<button type="button" class="close" (click)="c('Close click')">&times;</button>
-          		<h4 class="modal-title">User List App</h4> 
-       	 	</div>
-        	<div class="modal-body">
-        		<h3> Some text </h3>
-        		<div class="row">
-        			<div class="col-md-12">
-        				<hr>
-        				<h4 class="modal-title" align="center"> New User Data </h4> 
-        				<hr>
-        				<input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
-        				<hr>
-						<input class="form-control" [(ngModel)]="lastname" placeholder="Last Name">
-						<hr>
-						<input class="form-control" #Email [(ngModel)]="email" (click)="Email.value = ''" placeholder="Email">
-						<hr>
-						<input class="form-control" #dbth [(ngModel)]="dateofbirth" (click)="dbth.value = ''" placeholder="Date of Birth">
-						<hr>
-						<input class="form-control" #passwd [(ngModel)]="password" (click)="passwd.value = ''" placeholder="Password">
-						<hr>
-						<label *ngIf="emptyField" style="color: red;">Fill all text fields!</label>
-						<hr *ngIf="emptyField">
-						<select type="select" [(ngModel)]="role"> 
-							<option value="admin">admin</option>
-							<option value="viewer">viewer</option>
-						</select>
-					</div>
-				</div>
-        	</div>
-        	<div class="modal-footer">
-        		<button 
-					class="btn btn-primary"
-					(click)="addUser($event)"> Add User						
-				</button> &nbsp;
+<div class="modal fade" id="signUp">
+  <div class="modal-dialog" role="dialog">
+      <div class="modal-content"> 
+          <div class="modal-header">
+              <h3 class="modal-title"> New User Data </h3> 
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <input class="form-control" [(ngModel)]="firstname" placeholder="First Name"> 
+                <hr>
+                <input class="form-control" [(ngModel)]="lastname" placeholder="Last Name">
+                <hr>
+                <input class="form-control" #Email [(ngModel)]="email" (click)="Email.value = ''" placeholder="Email">
+                <hr>
+                <input class="form-control" #dbth [(ngModel)]="dateofbirth" (click)="dbth.value = ''" placeholder="Date of Birth">
+                <hr>
+                <input class="form-control" #passwd [(ngModel)]="password" (click)="passwd.value = ''" placeholder="Password">
+                <hr>
+                <label *ngIf="emptyField" style="color: red;">Fill all text fields!</label>
+                <hr *ngIf="emptyField">
+                <select type="select" [(ngModel)]="role"> 
+                  <option value="admin">admin</option>
+                  <option value="viewer">viewer</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button 
+              class="btn btn-primary"
+              (click)="addUser($event)"> Add User           
+            </button> &nbsp;
 
-				<button 
-					class="btn btn-info"
-					(click)="dataCleaner()"> Clear						
-				</button> &nbsp;
-			
-          		<button 
-          			type="button" 
-          			class="btn btn-info" 
-          			(click)="c('Close click')"> Close
-      			</button>
-        	</div>
-    	</div> 
-	</ng-template>
+            <button 
+              class="btn btn-info"
+              (click)="dataCleaner()"> Clear            
+            </button> &nbsp;
+    
+            <button 
+              type="button" 
+              class="btn btn-info" 
+              data-dismiss="modal"> Close
+            </button>
+          </div>
+      </div> 
+  </div>
+</div>
