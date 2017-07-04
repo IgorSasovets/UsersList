@@ -28,20 +28,20 @@
 
 	router.get('/users', function (req, res, next) {
 		User.find({})
-			.then(function gedData(users) {
+			.then((users) => {
 				res.json(users);
 			})
-			.catch(function getError(err) {
+			.catch((err) => {
 				res.status(500).json({error: 'Internal server error...'});
 			});
 	});
 
 	router.get('/user/:id', function (req, res, next) {
 		User.findOne({'_id' : req.params.id})
-			.then(function getUser(user) {
+			.then((user) => {
 				res.json(user);
 			})
-			.catch(function getError(err) {
+			.catch((err) => {
 				res.status(404).json({error: 'User with this defined id not found'});
 			});
 	});
@@ -50,10 +50,10 @@
 		var newUser = new User(req.body);
 
 		newUser.save()
-			.then(function onSuccess() {
+			.then(() => {
 				res.json(req.body);
 			}) 
-			.catch(function getError(err) {
+			.catch((err) => {
 				res.status(500).json({error: 'Bad data...'});
 			});
 	});
