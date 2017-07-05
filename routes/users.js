@@ -62,15 +62,13 @@
 		var info = jwt.verify(req.query.token, process.env.SECRET_KEY);
 
 		if (info._doc.role == 'admin') {
-			var query = User.findOneAndRemove({'_id' : req.params.id});
-
-			query.exec(function (err, user) {
-				if (err) {
-					res.send(err);
-				} else {
+			User.findOneAndRemove({'_id' : req.params.id})
+				.then((user) => {
 					res.json(user);
-				}
-			});
+				})
+				.catch((err) => {
+					res.send(err);
+				});
 		} else {
 			res.status(404).json({error: 'you have not enough privileges to perform this operation'});
 		}
@@ -82,13 +80,12 @@
 		if (info._doc.role == 'admin') {
 			User.findOneAndUpdate({'_id' : req.params.id}, 
 							{$set: {firstname: req.body.firstname, lastname: req.body.lastname, email: req.body.email, dateofbirth: req.body.dateofbirth, password: req.body.password, role: req.body.role}},
-							 {new: true}, 
-							 function (err, doc) {
-							 	if (err) {
-							 		return res.send(err);
-							 	} else {
-							 		res.json(doc);
-							 	}
+							 {new: true})
+							 .then((doc) => {
+							 	res.json(doc);
+							 }) 
+							 .catch((err) => {
+							 	res.send(err);
 							 });
 		} else {
 			res.status(404).json({error: 'you have not enough privileges to perform this operation'});
@@ -124,43 +121,34 @@
 	});
 
 	router.get('/users/searchbylastname', function (req, res, next) {
-		var query = User.find({'firstname': req.query.firstname, 'lastname': req.query.lastname});
-			
-		query.exec(function (err, users) {
-			if (err) {
-				res.send(err);
-			} else {
+		User.find({'firstname': req.query.firstname, 'lastname': req.query.lastname})
+			.then((users) => {
 				res.json(users);
-			}
-		});
+			})
+			.catch((err) => {
+				res.send(err);
+			});
 	});
 
 	router.get('/users/searchbyemail', function (req, res, next) {
-		var query = User.find({'firstname': req.query.firstname, 'email': req.query.email});
-			
-		query.exec(function (err, users) {
-			if (err) {
-				res.send(err);
-			} else {
+		User.find({'firstname': req.query.firstname, 'email': req.query.email})
+			then((users) => {
 				res.json(users);
-			}
-		});
+			})
+			.catch((err) => {
+				res.send(err);
+			});
 	});	
 
 	router.get('/users/pagination', function (req, res, next) {
 		var skipAmount = req.query.amount * (req.query.currpage - 1);
-		var query = User.find()
-			.skip(skipAmount)
-			.limit(req.query.amount);
-
-		query.exec(function (err, users) {
-			if (err) {
-				res.send(err);
-			} else {
+		User.find().skip(skipAmount).limit(req.query.amount)
+			.then((users) => {
 				res.json(users);
-				next();
-			}
-		});
+			})
+			.catch((err) => {
+				res.send(err);
+			});
 	});
 
 	module.exports = router;
