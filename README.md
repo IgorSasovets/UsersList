@@ -8,8 +8,11 @@ Also application provides pagination option, that's done on client side. User ca
 To run this app, please install node_modules folder into folder 'client' and then add required modules using npm.
 Project includes JWT based authorization. When user signed in, application generates a token and then uses it
 for different operations with database.
+
 Node.js version - v.8.0.0, Angular version - 4.2.4.
+
 To run application use following commands:
+
 - 'nodemon' in root folder (if you have already intalled) for the back-end. Run it before starting front-end;
 - 'npm start' in 'client' folder for front-end.
 
