@@ -157,13 +157,16 @@
 			<div class="row" *ngIf="isVerified && !searchAvailable">
 				<div class="col-md-8 pull-left">
 					<label>Amount of items:</label>
-					<select type="select" [(ngModel)]="amount"> 
-						<option value="1" (click)="calcNumberOfRecords(1)">1</option>
-						<option value="5" (click)="calcNumberOfRecords(5)">5</option>
-						<option value="10" (click)="calcNumberOfRecords(10)">10</option>
-						<option value="15" (click)="calcNumberOfRecords(15)">15</option>
-						<option value="20" (click)="calcNumberOfRecords(20)">20</option>
-						<option value="25" (click)="calcNumberOfRecords(25)">25</option>
+					<select 
+						type="select" 
+						[(ngModel)]="amount"
+						(change)="getAllUsers()"> 
+							<option value="1">1</option>
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+							<option value="25">25</option>
 					</select> &nbsp;
 
 					<label>Amount of records: {{ amountOfRecords }}</label> &nbsp;	
@@ -183,7 +186,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr *ngFor="let user of users | paginate: { itemsPerPage: amount, currentPage: page }">
+					<tr *ngFor="let user of users">
 						<td>{{ user.firstname }}</td>
 						<td>{{ user.lastname }}</td>
 						<td>{{ user.email }}</td>
@@ -258,9 +261,21 @@
 	
 			<hr>
 
-			<pagination-controls 
-				(pageChange)="page =$event" *ngIf="isVerified && !searchAvailable"></pagination-controls>
-			<hr *ngIf="isVerified && !searchAvailable"> 
+			<div 
+				[style.margin-left]="marginLeft"
+				*ngIf="isVerified && !searchAvailable">
+			    <div 
+			        *ngFor="let page of pages; let i = index ">
+			        <div
+			        	[ngClass]="{'pagination-item-selected': i + 1 === currentPage, 
+			                    'pagination-item-unselected': i + 1 !== currentPage}"
+			        	(click)="getUsersPagination(i + 1)">
+			        	<span class="paginate-block-item"> {{ i + 1 }} </span>
+			        </div> 
+			    </div>
+		    </div>
+
+		    <br>
 		</div>
 
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

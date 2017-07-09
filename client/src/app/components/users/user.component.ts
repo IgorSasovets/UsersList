@@ -6,6 +6,7 @@ import { User } from '../../../../User';
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
+  styleUrls: ['./user.component.css'],
   providers: [UserService, AuthService]
 })
 
@@ -30,30 +31,30 @@ export class UserComponent {
 
   	amount: number;
   	currentPage: number;
+  	marginLeft: string;
+  	pages: number[];
 
 	constructor(private userService: UserService, private authService: AuthService) {
-		this.currentPage = 1;
 		this.incorrectData = false;
 		this.searchAvailable = false;
 		this.isVerified = this.isAuthorized = false;
 		this.emptyField = false;
-		this.getAllUsers();
+		this.pages = [];
+		this.amount = 1;
 	}
 
     initializePagination() {
-  		this.amount = 1;
-		this.amountOfRecords = this.users.length;
-	}
-
-	calcNumberOfRecords(amount) {
-		this.amount = Number(amount);
-		this.amountOfRecords = this.users.length;
+		this.pages.length = Math.ceil(this.users.length / this.amount);
+		this.marginLeft = (50 - this.pages.length) + '%';
+		this.currentPage = 1;
+		this.getUsersPagination(this.currentPage);
 	}
 
 	getAllUsers() {
 		this.userService.getUsers()
 			.subscribe(users => {
 				this.users = users;
+				this.amountOfRecords = this.users.length;
 				this.initializePagination();
 			});
 	}
@@ -104,30 +105,28 @@ export class UserComponent {
 	addUser(event) {
 		event.preventDefault();
 
-		if (this.preAddOperations()) {
-		
-  		var newUser = {
-  			firstname: this.firstname,
-  			lastname: this.lastname,
-  			email: this.email,
-  			password: this.password,
-  			dateofbirth: this.dateofbirth,
-  			role: this.role
-  		};
+		if (this.preAddOperations()) {	
+	  		var newUser = {
+	  			firstname: this.firstname,
+	  			lastname: this.lastname,
+	  			email: this.email,
+	  			password: this.password,
+	  			dateofbirth: this.dateofbirth,
+	  			role: this.role
+	  		};
 
-  		this.getUserRole();
+	  		this.getUserRole();
 
-  		if (this.user_role == 'admin') {
-	  		this.userService.addUser(newUser)
-	  			.subscribe(user => {
-	  				this.dataCleaner();
-	  				this.getAllUsers();
-	  				this.users.push(newUser);
-	  				this.initializePagination();
-	  			});  
-  		} else {
-  			console.log('Only admin can perform CRUD operations!');
-  		}
+	  		if (this.user_role == 'admin') {
+		  		this.userService.addUser(newUser)
+		  			.subscribe(user => {
+		  				this.dataCleaner();
+		  				this.getAllUsers();
+		  				this.users.push(newUser);
+		  			});  
+	  		} else {
+	  			console.log('Only admin can perform CRUD operations!');
+	  		}
 		}  		
 	}
 
@@ -220,10 +219,14 @@ export class UserComponent {
 		localStorage.removeItem('token');
 	}
 
-	getUsersPagination() {
+	getUsersPagination(page) {
+		this.currentPage = page;
 		this.userService.getUsersPagination(this.amount, this.currentPage)
-			.subscribe(users => {
+			.subscribe((users) => {
 				this.users = users;
+			},
+			(err) => {
+				console.log(err);
 			});
 	}
 

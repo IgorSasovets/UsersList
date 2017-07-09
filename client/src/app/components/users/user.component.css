@@ -1,0 +1,29 @@
+.pagination-item-unselected {
+  float: left;
+  background-color: transparent;
+  color: #1a8383;
+  width: 30px;
+  height: 30px;
+  font-family: Roboto;
+  font-size: 14px;
+  padding-top: 4px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid;
+  border-color: #e6e6e6;
+}
+
+.pagination-item-selected {
+  float: left;
+  background-color: #1a8383;
+  color: #ffffff;
+  width: 30px;
+  height: 30px;
+  font-family: Roboto;
+  font-size: 14px;
+  padding-top: 4px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid;
+  border-color: #1a8383;
+}
