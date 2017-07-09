@@ -12,4 +12,5 @@ Node.js version - v.8.0.0, Angular version - 4.2.4.
 To run application use following commands:
 - 'nodemon' in root folder (if you have already intalled) for the back-end. Run it before starting front-end;
 - 'npm start' in 'client' folder for front-end.
+
 Also you need to create database that called 'userslist' in your MongoDB.
