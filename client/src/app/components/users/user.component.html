@@ -265,18 +265,18 @@
 				[style.margin-left]="marginLeft"
 				*ngIf="isVerified && !searchAvailable">
 			    <div 
-			        *ngFor="let page of pages; let i = index ">
+			        *ngFor="let page of pager.pages; let i = index ">
 			        <div
-			        	[ngClass]="{'pagination-item-selected': i + 1 === currentPage, 
-			                    'pagination-item-unselected': i + 1 !== currentPage}"
-			        	(click)="getUsersPagination(i + 1)">
-			        	<span class="paginate-block-item"> {{ i + 1 }} </span>
+			        	[ngClass]="{'pagination-item-selected': i + pager.startPage === pager.currentPage, 
+			                    'pagination-item-unselected': i + pager.startPage !== pager.currentPage}"
+			        	(click)="getUsersPagination(i + pager.startPage)">
+			        	<span class="paginate-block-item"> {{ i + pager.startPage }} </span>
 			        </div> 
 			    </div>
-		    </div>
-
-		    <br>
+		    </div> 
 		</div>
+
+		<br>
 
     	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

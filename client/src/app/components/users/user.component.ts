@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { PaginationService } from '../../services/pagination.service';
 import { User } from '../../../../User';
 
 @Component({
   selector: 'user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
-  providers: [UserService, AuthService]
+  providers: [UserService, AuthService, PaginationService]
 })
 
 export class UserComponent {
@@ -30,24 +31,21 @@ export class UserComponent {
 	role: string;
 
   	amount: number;
-  	currentPage: number;
   	marginLeft: string;
-  	pages: number[];
+  	pager: any = {};
 
-	constructor(private userService: UserService, private authService: AuthService) {
+	constructor(private userService: UserService, private authService: AuthService, private pagination: PaginationService) {
 		this.incorrectData = false;
 		this.searchAvailable = false;
 		this.isVerified = this.isAuthorized = false;
 		this.emptyField = false;
-		this.pages = [];
 		this.amount = 1;
 	}
 
     initializePagination() {
-		this.pages.length = Math.ceil(this.users.length / this.amount);
-		this.marginLeft = (50 - this.pages.length) + '%';
-		this.currentPage = 1;
-		this.getUsersPagination(this.currentPage);
+    	this.pager = this.pagination.getPagination(this.amountOfRecords, 1, this.amount);
+		this.marginLeft = (50 - this.pager.pages.length) + '%';
+		this.getUsersPagination(this.pager.currentPage);
 	}
 
 	getAllUsers() {
@@ -163,7 +161,7 @@ export class UserComponent {
 				if (this.users.length == 0) {
 					this.incorrectData = false;
 					this.searchAvailable = false;
-				this.isVerified = false;
+					this.isVerified = false;
 				}
 			}); 
 	}
@@ -220,8 +218,8 @@ export class UserComponent {
 	}
 
 	getUsersPagination(page) {
-		this.currentPage = page;
-		this.userService.getUsersPagination(this.amount, this.currentPage)
+		this.pager = this.pagination.getPagination(this.amountOfRecords, page, this.amount);
+		this.userService.getUsersPagination(this.amount, this.pager.currentPage)
 			.subscribe((users) => {
 				this.users = users;
 			},
