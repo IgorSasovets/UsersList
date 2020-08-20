@@ -9,7 +9,7 @@
   "author": "Igor Sasovets",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.2",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
     "ejs": "^2.5.6",
