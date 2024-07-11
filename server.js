@@ -23,6 +23,7 @@
 	app.use('/api', users);
 
 	app.listen(port, function () {
+		console.log('Test');
 		console.log(`Server started on port ${port}`);
 	});		
 }
